@@ -27,14 +27,14 @@ export default function Navbar() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActive(`#${entry.target.id}`);
+            setActive(entry.target.id === "hero" ? "" : `#${entry.target.id}`);
           }
         });
       },
       { rootMargin: "-40% 0px -55% 0px" }
     );
 
-    const sections = document.querySelectorAll("section[id]");
+    const sections = document.querySelectorAll("#hero, #about, #projects, #experience, #contact");
     sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
   }, []);
@@ -45,14 +45,14 @@ export default function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, delay: 0.2 }}
       className={`fixed top-4 left-4 right-4 z-50 mx-auto max-w-5xl rounded-2xl border transition-colors duration-300 ${
-        scrolled
-          ? "border-border/60 bg-background/80 backdrop-blur-xl shadow-lg shadow-black/20"
+        scrolled || mobileOpen
+          ? `border-border/60 ${mobileOpen ? "bg-background" : "bg-background/80 backdrop-blur-xl"} shadow-lg shadow-black/20`
           : "border-transparent bg-transparent"
       }`}
     >
       <nav className="flex items-center justify-between px-6 py-3">
         <a
-          href="#"
+          href="#hero"
           className="font-heading text-lg font-bold tracking-tight cursor-pointer"
         >
           <span className="text-accent">{"{"}</span>
@@ -90,6 +90,8 @@ export default function Navbar() {
           onClick={() => setMobileOpen(!mobileOpen)}
           className="cursor-pointer text-muted hover:text-foreground md:hidden"
           aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-navigation"
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -99,6 +101,7 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            id="mobile-navigation"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}

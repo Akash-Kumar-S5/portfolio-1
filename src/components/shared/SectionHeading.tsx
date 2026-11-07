@@ -19,7 +19,7 @@ export default function SectionHeading({
     >
       <h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
         <span className="text-accent font-mono text-lg font-normal md:text-xl">
-          //&nbsp;
+          {"//"}&nbsp;
         </span>
         {title}
       </h2>

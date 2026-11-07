@@ -13,21 +13,29 @@ export default function GridBackground() {
     if (!ctx) return;
 
     let animationId: number;
-    let mouseX = 0;
-    let mouseY = 0;
+    let mouseX = -9999;
+    let mouseY = -9999;
+    let isVisible = false;
+    let mouseActive = false;
+    let inactivityTimer: ReturnType<typeof setTimeout>;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
-    resize();
-    window.addEventListener("resize", resize);
 
     const onMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
+      mouseActive = true;
+      if (isVisible && !prefersReducedMotion.matches) draw();
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(() => {
+        mouseActive = false;
+        cancelAnimationFrame(animationId);
+      }, 120);
     };
-    window.addEventListener("mousemove", onMouseMove);
 
     const dotSpacing = 40;
     const maxRadius = 2.5;
@@ -35,6 +43,7 @@ export default function GridBackground() {
     const influenceRadius = 200;
 
     const draw = () => {
+      cancelAnimationFrame(animationId);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       for (let x = dotSpacing; x < canvas.width; x += dotSpacing) {
@@ -56,13 +65,33 @@ export default function GridBackground() {
         }
       }
 
-      animationId = requestAnimationFrame(draw);
+      if (isVisible && mouseActive && !prefersReducedMotion.matches) {
+        animationId = requestAnimationFrame(draw);
+      }
     };
+    const resizeAndDraw = () => {
+      resize();
+      draw();
+    };
+    resizeAndDraw();
+    window.addEventListener("resize", resizeAndDraw);
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      if (isVisible) draw();
+      else cancelAnimationFrame(animationId);
+    });
+    observer.observe(canvas);
+    const onMotionPreferenceChange = () => draw();
+    prefersReducedMotion.addEventListener("change", onMotionPreferenceChange);
+    window.addEventListener("mousemove", onMouseMove);
     draw();
 
     return () => {
       cancelAnimationFrame(animationId);
-      window.removeEventListener("resize", resize);
+      observer.disconnect();
+      prefersReducedMotion.removeEventListener("change", onMotionPreferenceChange);
+      clearTimeout(inactivityTimer);
+      window.removeEventListener("resize", resizeAndDraw);
       window.removeEventListener("mousemove", onMouseMove);
     };
   }, []);

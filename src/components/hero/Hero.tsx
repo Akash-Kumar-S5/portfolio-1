@@ -1,24 +1,21 @@
 "use client";
 
-import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
+import { MotionConfig, motion } from "framer-motion";
+import GridBackground from "./GridBackground";
 import TypingEffect from "./TypingEffect";
 import { ArrowDown } from "lucide-react";
 
-const GridBackground = dynamic(() => import("./GridBackground"), {
-  ssr: false,
-});
-
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden px-6">
+    <MotionConfig reducedMotion="user">
+    <section id="hero" className="relative flex min-h-screen items-center justify-center overflow-hidden px-6">
       <GridBackground />
 
       <div className="relative z-10 max-w-4xl text-center">
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+          transition={{ duration: 0.35, delay: 0.15 }}
           className="mb-4 font-mono text-sm text-accent md:text-base"
         >
           Hi, my name is
@@ -27,18 +24,18 @@ export default function Hero() {
         <TypingEffect text="Akash Kumar." />
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.5, duration: 0.5 }}
+          initial={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.35, delay: 0.25 }}
           className="mt-6 font-heading text-2xl font-semibold text-muted sm:text-3xl md:text-4xl"
         >
           I build things for the web.
         </motion.p>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 3, duration: 0.5 }}
+          initial={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.35, delay: 0.35 }}
           className="mx-auto mt-6 max-w-lg text-muted text-base md:text-lg"
         >
           Full Stack Developer at Presidio, passionate about translating creative
@@ -49,7 +46,7 @@ export default function Hero() {
           href="#projects"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 3.5, duration: 0.5 }}
+          transition={{ duration: 0.35, delay: 0.45 }}
           className="mt-10 inline-flex items-center gap-2 rounded-full border border-accent px-6 py-3 text-sm font-medium text-accent transition-colors hover:bg-accent/10 cursor-pointer"
         >
           View my work
@@ -58,10 +55,12 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
+      <motion.a
+        href="#about"
+        aria-label="Scroll to About"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 4, duration: 0.5 }}
+        transition={{ duration: 0.35, delay: 0.6 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <motion.div
@@ -71,7 +70,8 @@ export default function Hero() {
         >
           <div className="h-2 w-1 rounded-full bg-accent" />
         </motion.div>
-      </motion.div>
+      </motion.a>
     </section>
+    </MotionConfig>
   );
 }

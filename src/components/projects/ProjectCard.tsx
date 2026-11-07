@@ -37,7 +37,7 @@ export default function ProjectCard({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.3 }}
       onMouseMove={handleMouse}
-      className={`group relative cursor-pointer overflow-hidden rounded-xl border border-border/60 bg-surface/50 p-6 transition-colors hover:border-accent/30 ${
+      className={`group relative overflow-hidden rounded-xl border border-border/60 bg-surface/50 p-6 transition-colors hover:border-accent/30 ${
         featured ? "sm:col-span-2 sm:row-span-1" : ""
       }`}
     >

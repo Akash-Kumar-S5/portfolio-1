@@ -3,10 +3,10 @@
 import SectionHeading from "../shared/SectionHeading";
 import AnimatedSection from "../shared/AnimatedSection";
 import TerminalForm from "./TerminalForm";
-import { Code2, Globe, Send, Mail } from "lucide-react";
+import { Code2, Globe, Mail } from "lucide-react";
 
 const socials = [
-  { icon: Code2, label: "GitHub", href: "https://github.com/akashkumars" },
+  { icon: Code2, label: "GitHub", href: "https://github.com/Akash-Kumar-S5" },
   { icon: Globe, label: "LinkedIn", href: "https://www.linkedin.com/in/akash-kumars" },
   { icon: Mail, label: "Email", href: "mailto:akashkumar20485@gmail.com" },
 ];

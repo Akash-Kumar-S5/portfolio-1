@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 
 type Field = "email" | "message" | "done";
 
@@ -8,13 +8,25 @@ export default function TerminalForm() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [currentField, setCurrentField] = useState<Field>("email");
+  const messageRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (currentField === "email" && email.trim()) {
+    if (currentField === "email" && e.currentTarget.checkValidity()) {
       setCurrentField("message");
+      requestAnimationFrame(() => messageRef.current?.focus());
     } else if (currentField === "message" && message.trim()) {
+      const subject = encodeURIComponent(`Portfolio contact from ${email.trim()}`);
+      const body = encodeURIComponent(message.trim());
+      window.location.href = `mailto:akashkumar20485@gmail.com?subject=${subject}&body=${body}`;
       setCurrentField("done");
+    }
+  };
+
+  const handleMessageKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      e.currentTarget.form?.requestSubmit();
     }
   };
 
@@ -48,9 +60,10 @@ export default function TerminalForm() {
             <form onSubmit={handleSubmit} className="flex-1">
               <input
                 type="email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                autoFocus
+                aria-label="Your email address"
                 className="w-full bg-transparent text-foreground outline-none caret-accent"
                 placeholder="you@example.com"
               />
@@ -64,17 +77,26 @@ export default function TerminalForm() {
         {(currentField === "message" || currentField === "done") && (
           <div className="mt-2 flex items-start gap-2">
             <span className="text-accent">{">"}</span>
-            <span className="shrink-0 text-muted">enter your message:</span>
+            <span className="text-muted">enter your message:</span>
             {currentField === "message" ? (
               <form onSubmit={handleSubmit} className="flex-1">
-                <input
-                  type="text"
+                <textarea
+                  ref={messageRef}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  autoFocus
-                  className="w-full bg-transparent text-foreground outline-none caret-accent"
+                  onKeyDown={handleMessageKeyDown}
+                  aria-label="Your message"
+                  rows={3}
+                  required
+                  className="w-full resize-y bg-transparent text-foreground outline-none caret-accent"
                   placeholder="Hello there..."
                 />
+                <button
+                  type="submit"
+                  className="mt-2 rounded-md border border-accent/60 px-3 py-1 text-xs text-accent hover:bg-accent/10"
+                >
+                  send ↵
+                </button>
               </form>
             ) : (
               <span className="text-foreground">{message}</span>
@@ -90,7 +112,7 @@ export default function TerminalForm() {
               <span className="text-green-400">&#10003;</span>
             </div>
             <p className="mt-1 text-muted">
-              Message sent successfully! I&apos;ll get back to you soon.
+              Your email app was opened with the message ready to send.
             </p>
             <button
               onClick={reset}

@@ -1,5 +1,3 @@
-"use client";
-
 import Navbar from "@/components/nav/Navbar";
 import Hero from "@/components/hero/Hero";
 import About from "@/components/about/About";
@@ -28,7 +26,7 @@ export default function Home() {
           </p>
           <div className="flex gap-4">
             <a
-              href="https://github.com/akashkumars"
+              href="https://github.com/Akash-Kumar-S5"
               target="_blank"
               rel="noopener noreferrer"
               className="cursor-pointer text-muted transition-colors hover:text-accent"

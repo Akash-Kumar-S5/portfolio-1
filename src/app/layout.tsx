@@ -29,6 +29,11 @@ export const metadata: Metadata = {
       "Software engineer crafting performant, scalable, and delightful digital experiences.",
     type: "website",
   },
+  // The site is already dark: tell the Dark Reader extension not to rewrite it,
+  // which otherwise causes React hydration mismatches.
+  other: {
+    "darkreader-lock": "true",
+  },
 };
 
 export default function RootLayout({

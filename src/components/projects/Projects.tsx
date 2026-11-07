@@ -35,10 +35,11 @@ export default function Projects() {
 
         {/* Filter bar */}
         <div className="mb-10 flex flex-wrap gap-2">
-          {filters.map((f) => (
+          {filters.filter((f) => f === "all" || projects.some((project) => project.category === f)).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
+              aria-pressed={filter === f}
               className={`relative cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                 filter === f ? "text-accent" : "text-muted hover:text-foreground"
               }`}
@@ -58,7 +59,7 @@ export default function Projects() {
         {/* Project grid */}
         <motion.div
           layout
-          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-flow-dense gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
           <AnimatePresence mode="popLayout">
             {filtered.map((project) => (
